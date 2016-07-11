@@ -1,0 +1,29 @@
+div(ng-controller="fullMovie")
+  #fullMovieModal.modal.fade(tabindex='-1', role='dialog')
+      .modal-dialog.modal-wide
+          .modal-content
+            .modal-header
+              h3(ng-if="movie.fullInfoLoaded").center {{ movie.fullData.Title }} ({{ movie.fullData.Year }})
+            .modal-body.dialogContainer
+              div(ng-if="!movie.loadfailed")
+                div(ng-if="!movie.loading")
+                  //-START MAIN CONTENT
+                  .container-fluid.fullMovieContent
+                    .row
+                      .col-sm-4
+                        img.fullInfoImg(ng-src="{{ movie.imgurl }}")
+                      .col-sm-8
+                        .info {{ movie.fullData.Rated }} | {{ movie.fullData.Runtime }} | {{ movie.fullData.Genre}}
+                        .info
+                          b(style="font-size: 18pt;") {{ movie.fullData.imdbRating }}
+                          |  / 10 from {{ movie.fullData.imdbVotes }} votes.
+                        .plot {{ movie.fullData.Plot }}
+                .loading(ng-if="movie.loading")
+                  img.loadImg(src="/public/imgs/loading.gif")
+              .center(ng-if="movie.loadfailed")
+                .errormessage
+                  p Couldn't load more data!
+              //-END MAIN CONTENT
+            .modal-footer
+              button.btn.btn-danger.floatleft(ng-click="deleteMovie(movie)", ng-if="loggedin") Delete DVD
+              button.btn.btn-default(type='button', data-dismiss='modal') Close

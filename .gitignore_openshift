@@ -1,0 +1,9 @@
+#gitignore for openshift
+
+node_modules
+planning
+backups
+logs
+public
+.repo_swap
+setrepo.sh

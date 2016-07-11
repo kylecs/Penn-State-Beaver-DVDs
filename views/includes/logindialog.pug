@@ -1,0 +1,17 @@
+div(ng-controller="loginController")
+  #loginModal.modal.fade(tabindex='-1', role='dialog')
+      .modal-dialog
+          .modal-content
+            .modal-header
+              h3 Admin Login
+            .modal-body.dialogContainer
+              //-START MAIN CONTENT
+              .input-group.wide
+                input#passwordBox.form-control(type="password", placeholder="Enter Password", ng-model="password")
+                .input-group-btn
+                  button#loginButton.btn.btn-primary(type="button", ng-click="login()") Login
+              div.vertpadding.loading(ng-if="loading")
+                img(src="/public/imgs/loading.gif")
+              //-END MAIN CONTENT
+            .modal-footer
+              button.btn.btn-default(type='button', data-dismiss='modal') Close

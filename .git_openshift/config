@@ -1,0 +1,18 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = ssh://57365e220c1e661902000211@brmovies-rootns.rhcloud.com/~/git/brmovies.git/
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[rhc]
+	app-id = 57365e220c1e661902000211
+	app-name = brmovies
+	domain-name = rootns
+[remote "github"]
+	url = https://github.com/kylecs/Penn-State-Beaver-DVDs.git
+	fetch = +refs/heads/*:refs/remotes/github/*

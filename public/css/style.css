@@ -1,0 +1,197 @@
+.title{
+  font-size: 16pt;
+  font-weight: bold;
+}
+.movielistings{
+  text-align: center;
+  margin-top: 2%;
+  margin-bottom: 3%;
+}
+.col-md-3{
+}
+.col-md-3.nopadding{
+  padding: 0%;
+}
+.movtitle{
+  font-size: 18pt;
+}
+.modal-dialog{
+  height: 40%;
+  width: 60%;
+}
+.dialogContainer{
+  font-size: 14pt;
+  text-align: center;
+}
+.wide{
+  width: 100%;
+}
+.resulttable{
+  text-align: left;
+  width: 100%;
+  height: 100%;
+}
+.btncol{
+  text-align: center;
+  padding: 12%;
+}
+.resultrow{
+  border-top: 1px solid gray;
+}
+.resultcol{
+  padding: 8%;
+}
+.row{
+    overflow: hidden;
+}
+
+[class*="col-"]{
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
+.navbar-brand{
+  font-weight: bold;
+}
+.movimg{
+  width: 100%;
+}
+a.navbar-brand.pennstateblue{
+  color: #3B4C60;
+}
+.loadmore{
+  text-align: center;
+  font-weight: bold;
+  font-size: 14pt;
+}
+.loading{
+  text-align: center;
+}
+.vertpadding{
+  padding-top: 10%;
+  padding-bottom: 10%;
+}
+.topdialog{
+  padding-bottom: 2%;
+}
+.endmessage{
+  text-align: center;
+  font-weight: bold;
+  font-size: 15pt;
+}
+.pagetitle{
+  font-size: 15pt;
+  font-weight: bold;
+  text-align: center;
+}
+.loadImg{
+  padding-bottom: 3%;
+}
+.errormessage{
+  padding-top: 2%;
+  padding-bottom: 3%;
+  color: red;
+  font-size: 15pt;
+  font-weight: bold;
+  text-align: center;
+}
+
+.movieBox{
+  padding: 0px;
+  -webkit-box-shadow: 0px 1px 5px 2px rgba(0,0,0,0.48);
+  -moz-box-shadow: 0px 1px 5px 2px rgba(0,0,0,0.48);
+  box-shadow: 0px 1px 5px 2px rgba(0,0,0,0.48);
+  height: 100%;
+}
+
+.movieImgBox{
+  height: 100%;
+}
+
+.movieTitle{
+  text-align: center;
+  font-size: 12pt;
+  font-weight: bold;
+  padding-top: 3%;
+  padding-right: 2%;
+  padding-left: 2%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.movieRow{
+  padding-bottom: 1%;
+  padding-top: 1%;
+}
+
+@media (min-width: 800px){
+  .modal-dialog.modal-wide{
+    width: 85%;
+  }
+}
+@media (max-width: 800px){
+  .modal-dialog.modal-wide{
+    width: 100%;
+  }
+}
+@media (min-width: 1024px){
+  .modal-dialog.modal-wide{
+    width: 65%;
+  }
+}
+@media (min-width: 1600px){
+  .modal-dialog.modal-wide{
+    width: 750px;
+  }
+}
+
+@media (max-width: 768px){
+  .fullInfoImg{
+    width: 50%;
+  }
+  .fullMovieContent{
+    text-align: center;
+  }
+}
+
+@media (min-width: 768px){
+  .fullInfoImg{
+    width: 100%;
+  }
+  .fullMovieContent{
+    text-align: left;
+  }
+}
+
+@media (max-width: 768px){
+  .mobilepadding{
+    padding-top: 5%;
+  }
+}
+.center{
+  text-align: center;
+}
+
+.left{
+  text-align: left;
+}
+
+.info{
+  font-size: 16pt;
+  font-style: italic;
+  padding-bottom: 1%;
+}
+
+.plot{
+  padding-top: 1%;
+  font-size: 14pt;
+  border-top: 1px solid #e5e5e5;
+}
+
+.floatleft{
+  float: left;
+}
+
+html body{
+  font-family: "Avenir", sans-serif;
+}

@@ -1,0 +1,9 @@
+.movielistings
+  div(ng-repeat="chunk in currentPage.getChunkedData()")
+    .row.movieRow
+      .col-sm-3.moviecol.mobilepadding(ng-repeat="movie in chunk")
+        .movieBox(ng-if="movie.title", ng-click="selectMovie(movie)", data-toggle="tooltip", data-container=".movieBox"
+          data-placement="top", ng-attr-title="{{ movie.title }}. Click to expand.")
+          p.movieTitle {{ movie.title }}
+          .movieImgBox
+            img.movimg(ng-src="{{ movie.imgurl }}")

@@ -1,0 +1,22 @@
+extends layout.pug
+block head
+  title Penn State Beaver DVD's
+block content
+  div(ng-controller="listingController")
+    .row
+      span.col-md-12.pagetitle {{ currentPage.title }}
+    include includes/listings.pug
+    div(ng-if="!currentPage.failed")
+      .row(ng-if="currentPage.canLoadMore")
+        .col-md-12.loadmore(ng-if="!currentPage.loading")
+          a(ng-click="loadMore()") Load More
+        .col-md-12.loading(ng-if="currentPage.loading")
+          img.loadImg(src="/public/imgs/loading.gif")
+      .row.endmessage(ng-if="!currentPage.canLoadMore")
+        .col-md-12
+          p No more content to load
+    div(ng-if="currentPage.failed")
+      .row.errormessage
+        .col-md-12
+          p Couldn't load content!
+            a(href="javascript:location.reload();") (reload page)

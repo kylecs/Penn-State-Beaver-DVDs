@@ -1,0 +1,34 @@
+div(ng-controller="addMovieController")
+  #addMovieModal.modal.fade(tabindex='-1', role='dialog')
+      .modal-dialog
+          .modal-content
+            .modal-header
+              h3 Search for DVD
+            .modal-body.dialogContainer
+              //-START MAIN CONTENT
+              .input-group.wide
+                input#searchBox.form-control(type="text", placeholder="Search By Title", ng-model="search_term")
+                .input-group-btn
+                  button#searchButton.btn.btn-primary(type="button", ng-click="search()") Search
+              div(ng-if="hasResults")
+                br
+                b Results:
+                table.resulttable
+                  tr.resultrow(ng-repeat="result in results")
+                    td(style="width: 60%;")
+                      .resultcol {{ result.Title }}
+                    td
+                      .resultcol {{ result.Type }}
+                    td
+                      .resultcol {{ result.Year }}
+                    td
+                      .btncol
+                        button.btn.btn-primary(type="button", ng-click="addMovie(result)") Add
+              div.vertpadding(ng-if="loading")
+                img(src="/public/imgs/loading.gif")
+              div.vertpadding(ng-if="adding")
+                img(src="/public/imgs/loading.gif")
+                p Adding {{ addingTitle }} ...
+              //-END MAIN CONTENT
+            .modal-footer
+              button.btn.btn-default(type='button', data-dismiss='modal') Close

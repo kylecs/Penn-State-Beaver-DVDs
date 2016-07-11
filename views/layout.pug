@@ -1,0 +1,31 @@
+doctype html
+html(lang="en")
+  head
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    meta(name="description", content="Find DVD's located at the Penn State Beaver Library.")
+    meta(charset="utf-8")
+    
+    link(rel="shortcut icon", href="/public/imgs/favicon.ico", type="image/x-icon")
+    link(rel="stylesheet", href="/public/css/style.css")
+    link(rel="stylesheet", href="/public/css/bootstrap.min.css")
+    link(rel="stylesheet", href="/public/css/animate.min.css")
+    
+    script(src="/public/js/jquery.min.js")
+    script(src="/public/js/bootstrap.min.js")
+    script(src="/public/js/angular.min.js")
+    script(src="/public/js/bootstrap-notify.min.js")
+    script(src="/public/js/brmovies.min.js")
+    
+    block head
+    
+
+  body(ng-app="brmovies")
+    //-fullmoviedialog.pug is included under navbarController so it can have access to loggedin
+    div(ng-controller='navbarController')
+      include ./includes/fullmoviedialog.pug
+      include ./includes/navbar.pug
+    include ./includes/addmoviedialog.pug
+    include ./includes/logindialog.pug
+    
+    .container
+      block content

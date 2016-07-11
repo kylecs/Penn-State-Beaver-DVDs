@@ -1,0 +1,8 @@
+#gitignore for github
+
+dist
+.openshift
+planning
+node_modules
+logs
+.repo_swap
