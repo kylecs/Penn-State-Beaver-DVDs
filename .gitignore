@@ -6,3 +6,4 @@ planning
 node_modules
 logs
 .repo_swap
+.git_openshift
