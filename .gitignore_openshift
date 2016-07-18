@@ -7,3 +7,5 @@ logs
 public
 .repo_swap
 setrepo.sh
+.git_github
+data

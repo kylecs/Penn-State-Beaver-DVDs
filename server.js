@@ -22,14 +22,14 @@ var cache = new NodeCache({
 
 //create routes, to be added in MoviesApp.initialize()
 var auth = require("./routes/auth")(logger, express);
-var api = require("./routes/api")(logger, express, request, database, cache, auth);
+var api = require("./routes/api")(logger, express, request, database, cache, auth, fs);
 
 //this handles cache expiration / regeneration
 var cacheUtils = require("./cache/cacheUtil")(logger, cache, database);
 
-//sets up a winston logger on console and files
+//sets up a winston logger on console and file
 function createLogger() {
-  //find dir on openshift or locally
+  //find directory on openshift or locally
   var logDir = "";
   if(process.env.OPENSHIFT_DATA_DIR){
     logDir += process.env.OPENSHIFT_DATA_DIR + "winston-logs/";
@@ -118,6 +118,7 @@ var MoviesApp = function() {
         //setup routes
         self.app.set("view engine", "pug");
         self.app.use("/public", express.static("dist"));
+        self.app.use("/images", express.static(global.ImageDir));
         self.app.use("/api/", api.router);
         self.app.use("/auth/", auth.router);
         self.app.get("/", function(req, res){

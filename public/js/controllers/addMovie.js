@@ -59,8 +59,8 @@ app.controller("addMovieController", function($scope, $http, $rootScope){
      var imdbVotes = data.imdbVotes;
      var imdbRating = data.imdbRating;
      var poster_url = data.Poster;
-     var genre_raw = data.Genre;
-     var genre_formated = genre_raw.toLowerCase();
+     var genre = data.Genre;
+     console.log("Add movie genres: " + genre);
 
      //Format data to send to server
      var postdata = {
@@ -72,7 +72,7 @@ app.controller("addMovieController", function($scope, $http, $rootScope){
        imdbVotes: imdbVotes,
        imdbRating: imdbRating,
        origin_url: poster_url,
-       categories: genre_formated,
+       categories: genre,
        imdb_id: initial_id
      }
 

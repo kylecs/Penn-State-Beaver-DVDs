@@ -43,7 +43,9 @@ ListingPage.prototype.loadPage = function($http, done){
       self.canLoadMore = false;
     }
     self.movies.forEach(function(movie, index){
-      movie.imgurl = "http://imgserv1-rootns.rhcloud.com/static/" + movie.imdb_id + ".jpg";
+      //movie.imgurl = "http://imgserv1-rootns.rhcloud.com/static/" + movie.imdb_id + ".jpg";
+      movie.imgurl = "/images/" + movie.imdb_id + ".jpg";
+
     });
     self.chunkData();
     self.loaded = true;
@@ -98,7 +100,8 @@ ListingPage.prototype.loadMore = function($http){
       new_movies.push(new Movie(val.title, val.imdb_id));
     });
     new_movies.forEach(function(movie, index){
-      movie.imgurl = "http://imgserv1-rootns.rhcloud.com/static/" + movie.imdb_id + ".jpg";
+      //movie.imgurl = "http://imgserv1-rootns.rhcloud.com/static/" + movie.imdb_id + ".jpg";
+      movie.imgurl = "/images/" + movie.imdb_id + ".jpg";
     });
     console.log(new_movies);
     self.movies = self.movies.concat(new_movies);

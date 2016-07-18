@@ -1,7 +1,39 @@
 
-module.exports = function(logger, express, request, database, cache, auth){
+module.exports = function(logger, express, request, database, cache, auth, fs){
   var mod = {};
   var router = express.Router();
+
+  router.get("/keepalive", function(req, res){
+    res.send("Still Alive!");
+  });
+
+  //ensure we have image, download if not, callback 'then' is given true
+  //if and only if the image exists
+  function addImage(imdb_id, origin_url, then) {
+    logger.info("Attempting to download image");
+    var options = {
+            url: origin_url,
+            headers: {
+              referer: "http://imdb.com/"
+            }
+        }
+    //check if file exists
+    fs.stat(global.ImageDir + imdb_id + ".jpg", function(err, stat) {
+      if(!err) {
+        then(true);
+        return;
+      }
+
+      //download image
+      request(options).pipe(
+        fs.createWriteStream(global.ImageDir + imdb_id + ".jpg"))
+        .on("close", function(){
+                then(true)
+              }).on("error", function(err){
+                then(false);
+              });
+    });
+  }
 
   //Add movie to database, and request image server to download image
   router.post("/addmovie", auth.requireLogin, function(req, res){
@@ -44,59 +76,58 @@ module.exports = function(logger, express, request, database, cache, auth){
         return;
       }
       //HERE: The movie does not exists, next we will try to get the picture added
-      request.post("http://imgserv1-rootns.rhcloud.com/add", {
-        form: {
-          url: origin_url,
-          imdb_id: imdb_id,
-          authToken: process.env.AUTH_TOKEN
-        }
-      }, function(error, response, body){
-        if(error){
-          logger.error("Image Server Error: ", error)
-          res.send({error: "Image Server Error"});
+      addImage(imdb_id, origin_url, function(result) {
+        if(result){
+          logger.info("Image download success");
+          //HERE: The picture is successfully added, now we will try to create the movie in the db
+          database.Movie.create({
+            imdb_id: imdb_id,
+            title: title,
+            rated: rated,
+            year: year,
+            imdbVotes: imdbVotes,
+            imdbRating: imdbRating,
+            type: type,
+            runtime: runtime
+          }).then(function(movie){
+            if(movie.imdb_id != imdb_id){
+              res.send({error: "Database Error"})
+              logger.error("Database Error, ID's don't match");
+              return
+            }
+            //HERE: movie is added to db, now we add categories
+            categories.forEach(function(item, index){
+              database.Category.findOne({
+                where: {
+                  name: item
+                }
+              }).then(function(category){
+                if(category){
+                  movie.addCategory(category);
+                  logger.debug("Category exists! " + item);
+                }else{
+                  logger.debug("Creating category! " + item);
+                  database.Category.create({
+                    name: item
+                  }).then(function(category){
+                    movie.addCategory(category);
+                  })
+                }
+              })
+            });
+
+            //Flush cache so the new movie shows up in all new requests
+            logger.info("DVD Added, Flushing cache");
+            cache.flushAll();
+            res.send({success: "Movie added"})
+          });
+        }else{
+          logger.info("Image download failure");
+          res.send({error: "Couldn't download image"});
           return;
         }
-        //HERE: The picture is successfully added, now we will try to create the movie in the db
-        database.Movie.create({
-          imdb_id: imdb_id,
-          title: title,
-          rated: rated,
-          year: year,
-          imdbVotes: imdbVotes,
-          imdbRating: imdbRating,
-          type: type,
-          runtime: runtime
-        }).then(function(movie){
-          if(movie.imdb_id != imdb_id){
-            res.send({error: "Database Error"})
-            logger.error("Database Error, ID's don't match");
-            return
-          }
-          //HERE: movie is added to db, now we add categories
-          categories.forEach(function(item, index){
-            database.Category.findOne({
-              where: {
-                name: item
-              }
-            }).then(function(category){
-              if(category){
-                movie.addCategory(category);
-              }else{
-                database.Category.create({
-                  name: item
-                }).then(function(category){
-                  movie.addCategory(category);
-                })
-              }
-            })
-          });
-
-          //Flush cache so the new movie shows up in all new requests
-          logger.info("DVD Added, Flushing cache");
-          cache.flushAll();
-          res.send({success: "Movie added"})
-        })
       });
+
     });
   });
 
@@ -354,6 +385,8 @@ module.exports = function(logger, express, request, database, cache, auth){
         }).then(function(movies){
           if(movies.length <= 1){
             //small category, delete
+            logger.debug("Deleting category: " + category.name);
+            category.destroy();
           }
         });
         if(index == array.length - 1){

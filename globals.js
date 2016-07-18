@@ -16,4 +16,10 @@ module.exports = function(){
     console.log("Local Debug Environment Detected");
     global.Production = false;
   }
+
+  if(global.Production) {
+    global.ImageDir = process.env.OPENSHIFT_DATA_DIR + "images/";
+  }else {
+    global.ImageDir = "data/images/";
+  }
 }
