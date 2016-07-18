@@ -1,6 +1,6 @@
 #Penn State Movies Website
 
-This is the code that powers brmovies.kylespencer.me, a DVD catalog for all DVDs
+This is the code that powers http://brmovies.kylespencer.me, a DVD catalog for all DVDs
 available at the Penn State Beaver Library. The website supports sorting available
 DVDs by several parameters, including age and category.
 
