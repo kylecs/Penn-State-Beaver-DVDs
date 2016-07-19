@@ -8,8 +8,8 @@ block content
         .col-md-12.pagetitle
           span.glyphicon.glyphicon-remove-sign.searchClose(ng-click="removeSearch()")
           span Search Results: {{ searchTerm }}
-      .row(style="margin-top: 3%;")
-        .col-sm-3.moviecol.mobilepadding(ng-repeat="movie in searchResults")
+      .row(ng-repeat="chunk in searchChunks", style="margin-top: 3%;")
+        .col-sm-3.moviecol.mobilepadding(ng-repeat="movie in chunk")
           .movieBox(ng-if="movie.title", ng-click="selectMovie(movie)", data-toggle="tooltip", data-container=".movieBox"
             data-placement="top", ng-attr-title="{{ movie.title }}. Click to expand.")
             p.movieTitle {{ movie.title }}

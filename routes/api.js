@@ -356,7 +356,7 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
   router.get("/search", function(req, res){
     var title = req.query.title;
     database.Movie.findAll({
-      limit: 4,
+      limit: 8,
       where: {
         title: {
           $iLike: "%" + title + "%",

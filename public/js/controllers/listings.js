@@ -12,6 +12,7 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
   $scope.searchLoading = true;
   $scope.searchTerm = "";
   $scope.searchResults = [];
+  $scope.searchChunks = [];
 
   //Request the current page to extend
   $scope.loadMore = function(){
@@ -117,28 +118,78 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
     $scope.searchTerm = searchTerm;
     $scope.searchLoading = true;
     $scope.searchResults = [];
+    $scope.searchChunks = [];
 
     $http.get("/api/search?title=" + searchTerm).then(function(response){
       var data = response.data;
         if(data){
+          if(data.length == 0) {
+            $scope.showingSearch = false;
+            console.log("no results");
+            $.notify({
+              message: "No Search Results"
+            },{
+              placement: {
+                 from: "top",
+                 align: "center"
+               },
+              type: "danger"
+            });
+            return;
+          }
           //success, got results
           $scope.searchLoading = false;
           data.forEach(function(val, index, array){
             var mov = new Movie(val.title, val.imdb_id);
             mov.imgurl = "/images/" + mov.imdb_id + ".jpg";
-            console.log(mov);
             $scope.searchResults.push(mov);
+            if(index == array.length - 1) {
+              chunkSearchResults();
+            }
           });
         }else {
-          //notify not found
+          console.log("Server Error!");
+          $.notify({
+            message: "Server Error"
+          },{
+            placement: {
+ 		          from: "top",
+ 		          align: "center"
+ 	          },
+            type: "danger"
+          });
           $scope.showingSearch = false;
         }
     }).catch(function(error){
-      console.log("Server Error!");
-      //notify failure
+      console.log("Couldn't Reach Server!");
+      $.notify({
+        message: "Couldn't Reach Server"
+      },{
+        placement: {
+           from: "top",
+           align: "center"
+         },
+        type: "danger"
+      });
       $scope.showingSearch = false;
     });
   });
+
+  function chunkSearchResults() {
+    for(var i = 0; i < $scope.searchResults.length;  i += 4){
+      chunk = $scope.searchResults.slice(i, i+4);
+      buffer = 4 - chunk.length;
+      if(buffer > 4 || buffer < 0){
+        buffer = 0;
+      }
+      if(buffer > 0){
+        for(var n = 0; n < buffer; n++){
+          chunk.push([]);
+        }
+      }
+      $scope.searchChunks.push(chunk);
+  }
+}
 
   //remove search display
   $scope.removeSearch = function() {
