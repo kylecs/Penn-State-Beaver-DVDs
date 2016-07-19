@@ -8,3 +8,5 @@ logs
 .repo_swap
 .git_openshift
 data
+public/imgs
+public/fonts
