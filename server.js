@@ -92,7 +92,7 @@ var MoviesApp = function() {
            logger.info("Process Received %s - Terminating...", sig);
            process.exit(1);
         }
-        logger.info("%s: Node server stopped.", Date(Date.now()));
+        logger.info("Node server stopped.");
     };
 
     //Setup express
@@ -122,10 +122,10 @@ var MoviesApp = function() {
         self.app.use("/api/", api.router);
         self.app.use("/auth/", auth.router);
         self.app.get("/", function(req, res){
-          res.render("index.pug")
+          res.render("index.pug");
         });
         self.app.get("/login", function(req, res){
-          res.render("login.pug")
+          res.render("login.pug");
         });
         logger.info("Server Initialized");
     };

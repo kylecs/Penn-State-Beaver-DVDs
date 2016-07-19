@@ -6,12 +6,17 @@ var cleanCSS = require("gulp-clean-css");
 
 gulp.task("default", function(){
   gulp.start("copyimgs");
+  gulp.start("copyfonts");
   gulp.start("copyjslibs");
   gulp.start("copycsslibs");
   gulp.start("minifyjs");
   gulp.start("minifycss");
 
-})
+});
+
+gulp.task("watch", function(){
+  gulp.watch("public/**/*", ["default"]);
+});
 
 //concat and minify scripts
 gulp.task("minifyjs", function() {
@@ -48,4 +53,9 @@ gulp.task("copycsslibs", function() {
 gulp.task("copyimgs", function() {
   gulp.src("public/imgs/*")
       .pipe(gulp.dest("dist/imgs"));
-})
+});
+
+gulp.task("copyfonts", function() {
+  gulp.src("public/fonts/*")
+      .pipe(gulp.dest("dist/fonts"));
+});

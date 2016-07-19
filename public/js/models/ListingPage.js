@@ -19,16 +19,6 @@ var ListingPage = function(title, apiUrl, urlParamsExist){
   }
 }
 
-//Request a movie to load and show full info from the omdb api
-ListingPage.prototype.showFullInfo = function($http, movie){
-  var self = this;
-  if(self.movies.indexOf(movie) < 0){
-    console.log("ERROR: Category does not contain selected movie!");
-    return;
-  }
-  movie.loadFullInfo($http);
-}
-
 //Load the initial page from the server
 ListingPage.prototype.loadPage = function($http, done){
   var self = this;
@@ -43,7 +33,6 @@ ListingPage.prototype.loadPage = function($http, done){
       self.canLoadMore = false;
     }
     self.movies.forEach(function(movie, index){
-      //movie.imgurl = "http://imgserv1-rootns.rhcloud.com/static/" + movie.imdb_id + ".jpg";
       movie.imgurl = "/images/" + movie.imdb_id + ".jpg";
 
     });

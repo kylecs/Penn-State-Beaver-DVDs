@@ -352,6 +352,21 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
     });
   });
 
+  //Search movie by title
+  router.get("/search", function(req, res){
+    var title = req.query.title;
+    database.Movie.findAll({
+      limit: 4,
+      where: {
+        title: {
+          $iLike: "%" + title + "%",
+        }
+      }
+    }).then(function(movies){
+      res.send(JSON.stringify(movies));
+    });
+  });
+
   //Delete a movie by imdb id
   router.get("/remove", auth.requireLogin, function(req, res){
     var movieid = req.query.movieid;

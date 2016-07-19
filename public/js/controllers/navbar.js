@@ -2,6 +2,7 @@
 app.controller("navbarController", function($rootScope, $scope, $http){
   $scope.categories = [];
   $scope.loggedin = false;
+  $scope.searchTerm = "";
 
   //Load category list from server
   function loadAllCategories(){
@@ -26,6 +27,12 @@ app.controller("navbarController", function($rootScope, $scope, $http){
   $scope.$on("login", function(event, arg){
     $scope.loggedin = true;
   });
+
+  //handle search, forward result to listings.js
+  $scope.executeSearch = function(){
+    $rootScope.$broadcast("search", $scope.searchTerm);
+    $scope.searchTerm = "";
+  }
 
   //Request server to logout
   $scope.logout = function(){

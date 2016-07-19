@@ -3,6 +3,18 @@ block head
   title Penn State Beaver DVDs
 block content
   div(ng-controller="listingController")
+    .searchResults(ng-if="showingSearch")
+      .row
+        .col-md-12.pagetitle
+          span.glyphicon.glyphicon-remove-sign.searchClose(ng-click="removeSearch()")
+          span Search Results: {{ searchTerm }}
+      .row(style="margin-top: 3%;")
+        .col-sm-3.moviecol.mobilepadding(ng-repeat="movie in searchResults")
+          .movieBox(ng-if="movie.title", ng-click="selectMovie(movie)", data-toggle="tooltip", data-container=".movieBox"
+            data-placement="top", ng-attr-title="{{ movie.title }}. Click to expand.")
+            p.movieTitle {{ movie.title }}
+            .movieImgBox
+              img.movimg(ng-src="{{ movie.imgurl }}")
     .row
       span.col-md-12.pagetitle {{ currentPage.title }}
     include includes/listings.pug

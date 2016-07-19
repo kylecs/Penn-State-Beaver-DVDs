@@ -5,7 +5,13 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
   var topRatedPage = new ListingPage("Top Rated Movies", "/api/top", false);
   var seriesPage = new ListingPage("TV Series", "/api/tv", false);
   var categoryPages = [];
-  var ignoreHashChange = false
+  var ignoreHashChange = false;
+
+  //search tracking
+  $scope.showingSearch = false;
+  $scope.searchLoading = true;
+  $scope.searchTerm = "";
+  $scope.searchResults = [];
 
   //Request the current page to extend
   $scope.loadMore = function(){
@@ -15,7 +21,7 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
 
   //Request movie to load full info, request fullMovie dialog controller to show movie
   $scope.selectMovie = function(movie){
-    $scope.currentPage.showFullInfo($http, movie);
+    movie.loadFullInfo($http);
     $rootScope.$broadcast("selectFullMovie", movie);
   }
 
@@ -40,6 +46,7 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
   Set a category page, update url hash
   */
   function selectCategory(category){
+    $scope.showingSearch = false;
     console.log("selecting category: " + category);
     ignoreHashChange = true;
     $window.location.hash = "#category_" + category;
@@ -73,6 +80,7 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
     $window.location.hash = "#popular";
     $scope.currentPage = popularPage;
     popularPage.loadIfNotLoaded($http);
+    $scope.showingSearch = false;
   });
 
   $scope.$on("selectSeries", function(event, arg){
@@ -81,6 +89,7 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
     $window.location.hash = "#series";
     $scope.currentPage = seriesPage;
     seriesPage.loadIfNotLoaded($http);
+    $scope.showingSearch = false;
   });
 
   $scope.$on("selectNew", function(event, arg){
@@ -89,6 +98,7 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
     $window.location.hash = "#new";
     $scope.currentPage = newPage;
     newPage.loadIfNotLoaded($http);
+    $scope.showingSearch = false;
   });
 
   $scope.$on("selectTopRated", function(event, arg){
@@ -97,7 +107,43 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
     $window.location.hash = "#top";
     $scope.currentPage = topRatedPage;
     topRatedPage.loadIfNotLoaded($http);
+    $scope.showingSearch = false;
   });
+
+  //Request search from server, display results
+  $scope.$on("search", function(event, searchTerm) {
+    console.log("Searching: " + searchTerm);
+    $scope.showingSearch = true;
+    $scope.searchTerm = searchTerm;
+    $scope.searchLoading = true;
+    $scope.searchResults = [];
+
+    $http.get("/api/search?title=" + searchTerm).then(function(response){
+      var data = response.data;
+        if(data){
+          //success, got results
+          $scope.searchLoading = false;
+          data.forEach(function(val, index, array){
+            var mov = new Movie(val.title, val.imdb_id);
+            mov.imgurl = "/images/" + mov.imdb_id + ".jpg";
+            console.log(mov);
+            $scope.searchResults.push(mov);
+          });
+        }else {
+          //notify not found
+          $scope.showingSearch = false;
+        }
+    }).catch(function(error){
+      console.log("Server Error!");
+      //notify failure
+      $scope.showingSearch = false;
+    });
+  });
+
+  //remove search display
+  $scope.removeSearch = function() {
+    $scope.showingSearch = false;
+  }
 
   //Update current page based on url hash
   function updateHashLocation(){
@@ -136,6 +182,7 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
   $(window).bind("hashchange", function(e){
     if(!ignoreHashChange){
       console.log("Responding to hash change event");
+      $scope.showingSearch = false;
       updateHashLocation();
       $scope.currentPage.loadIfNotLoaded($http);
       $scope.$apply();
