@@ -361,7 +361,10 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
         title: {
           $iLike: "%" + title + "%",
         }
-      }
+      },
+      order: [
+        ["imdbVotes", "DESC"]
+      ]
     }).then(function(movies){
       res.send(JSON.stringify(movies));
     });
