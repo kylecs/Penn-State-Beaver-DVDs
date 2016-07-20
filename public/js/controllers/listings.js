@@ -175,6 +175,7 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
     });
   });
 
+  //convert search results to chunked format for bootstrap row compatability.
   function chunkSearchResults() {
     for(var i = 0; i < $scope.searchResults.length;  i += 4){
       chunk = $scope.searchResults.slice(i, i+4);
