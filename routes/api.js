@@ -372,7 +372,6 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
 
   //Delete a movie by imdb id
   router.get("/remove", auth.requireLogin, function(req, res){
-
     var movieid = req.query.movieid;
     if(movieid == null || movieid.length == 0){
       res.send({error: "Invalid input"});
@@ -396,6 +395,7 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
 
   //Deletes categories with fewer than 2 movies in it
   router.get("/cleancategories", auth.requireLogin, function(req, res){
+    logger.info("Cleaning categories");
     database.Category.findAll().then(function(categories){
       categories.forEach(function(category, index, array){
         category.getMovies({
@@ -405,7 +405,7 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
         }).then(function(movies){
           if(movies.length <= 1){
             //small category, delete
-            logger.debug("Deleting category: " + category.name);
+            logger.warn("Deleting category: " + category.name);
             category.destroy();
           }
         });
