@@ -372,6 +372,7 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
 
   //Delete a movie by imdb id
   router.get("/remove", auth.requireLogin, function(req, res){
+
     var movieid = req.query.movieid;
     if(movieid == null || movieid.length == 0){
       res.send({error: "Invalid input"});
@@ -386,6 +387,7 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
         res.send({error: "DVD not found"});
         return;
       }
+      logger.warn("Deleting title: " + movie.title);
       movie.destroy();
       cache.flushAll();
       res.send({result: "DVD deleted"});
