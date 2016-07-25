@@ -327,9 +327,6 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
           category.getMovies({
             offset: page*16,
             limit: 16,
-            where: {
-              type: "movie"
-            },
             order: [
               ["imdbVotes", "DESC"]
             ],
@@ -395,7 +392,7 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
 
   //Deletes categories with fewer than 2 movies in it
   router.get("/cleancategories", auth.requireLogin, function(req, res){
-    logger.info("Cleaning categories");
+    logger.info("Cleaning categories")
     database.Category.findAll().then(function(categories){
       categories.forEach(function(category, index, array){
         category.getMovies({

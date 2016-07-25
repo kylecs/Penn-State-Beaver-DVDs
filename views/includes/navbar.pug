@@ -10,12 +10,17 @@ nav.navbar.navbar-default
     //-Collect the nav links, forms, and other content for toggling
     #bs-example-navbar-collapse-1.collapse.navbar-collapse
       ul.nav.navbar-nav
-        li.active#selectPopular
-          a(href="", ng-click="selectPopular()") Popular
-        li#selectNew
-          a(href="", ng-click="selectNew()") New
-        li#selectTopRated
-          a(href="", ng-click="selectTopRated()") Top Rated
+        li.dropdown
+          a.dropdown-toggle(href="", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false")
+            | Movies
+            span.caret
+          ul.dropdown-menu
+            li.active#selectPopular
+              a(href="", ng-click="selectPopular()") Popular
+            li#selectNew
+              a(href="", ng-click="selectNew()") New
+            li#selectTopRated
+              a(href="", ng-click="selectTopRated()") Top Rated
         li#selectSeries
           a(href="", ng-click="selectSeries()") TV Series
         li.dropdown
@@ -26,12 +31,11 @@ nav.navbar.navbar-default
             li(ng-repeat='category in categories')
               a(ng-click="selectCategory(category)") {{ category }}
 
-      form.navbar-form.navbar-left(role="search")
-        .input-group
-          input.form-control(type="text", placeholder="Search Titles", ng-model="searchTerm")
-          span.input-group-btn
-            button.btn.btn-default(type="submit", ng-click="executeSearch()") Search
-
+        form.navbar-form.navbar-left(role="search")
+          .input-group
+            input.form-control(type="text", placeholder="Search Titles", ng-model="searchTerm")
+            span.input-group-btn
+              button.btn.btn-default(type="submit", ng-click="executeSearch()") Search
 
       ul.nav.navbar-nav.navbar-right
         li.dropdown(ng-if="loggedin")
