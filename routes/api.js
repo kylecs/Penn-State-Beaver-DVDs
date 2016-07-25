@@ -361,7 +361,8 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
       },
       order: [
         ["imdbVotes", "DESC"]
-      ]
+      ],
+      attributes: ["imdb_id", "title"]
     }).then(function(movies){
       res.send(JSON.stringify(movies));
     });
