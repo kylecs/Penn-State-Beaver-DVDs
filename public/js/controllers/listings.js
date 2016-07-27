@@ -6,6 +6,7 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
   var seriesPage = new ListingPage("TV Series", "/api/tv", false);
   var categoryPages = [];
   var ignoreHashChange = false;
+  var shouldExtend = true;
 
   //search tracking
   $scope.showingSearch = false;
@@ -253,10 +254,15 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
   //Load more pages when scrolled to the bottom
   $(window).scroll(function(){
     if($(window).scrollTop() + $(window).height() > $(document).height() - 50){
-      if(!$scope.currentPage.loading && $scope.currentPage.canLoadMore){
+
+      if(!$scope.currentPage.loading && $scope.currentPage.canLoadMore && shouldExtend){
+        shouldExtend = false;
+        setTimeout(function() {
+          shouldExtend = true;
+          console.log("should extend now");
+        }, 500);
         $scope.currentPage.loadMore($http);
       }
     }
   });
-
 });
