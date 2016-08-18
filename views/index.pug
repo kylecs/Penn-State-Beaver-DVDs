@@ -18,6 +18,7 @@ block content
     div(ng-if="!showingSearch")
       .row
         span.col-md-12.pagetitle {{ currentPage.title }}
+        span.col-md-12.pagedescription(ng-if="currentPage.description") {{ currentPage.description }}
       include includes/listings.pug
       div(ng-if="!currentPage.failed")
         .row(ng-if="currentPage.canLoadMore")

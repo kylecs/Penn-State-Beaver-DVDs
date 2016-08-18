@@ -1,6 +1,7 @@
-var Movie = function(title, imdb_id){
+var Movie = function(title, imdb_id, type){
   this.fullInfoLoaded = false;
   this.title = title;
+  this.type = type;
   this.imdb_id = imdb_id;
   this.failedLoad = false;
   this.loading = false;

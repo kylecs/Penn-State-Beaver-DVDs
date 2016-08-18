@@ -1,12 +1,23 @@
 //Controls the movie listings, responds to hash changes and page select requests
 app.controller("listingController", function($scope, $http, $window, $rootScope){
+  //page handling
   var popularPage = new ListingPage("Popular Movies", "/api/popular", false);
   var newPage = new ListingPage("New Movies", "/api/new", false);
   var topRatedPage = new ListingPage("Top Rated Movies", "/api/top", false);
   var seriesPage = new ListingPage("TV Series", "/api/tv", false);
   var categoryPages = [];
+
+  //used to handle hash changes
   var ignoreHashChange = false;
+
+  //timing so api isn't accidentally overloaded with unintentional requests
   var shouldExtend = true;
+
+  //Page descriptions
+  popularPage.description = "Most Imdb Votes"
+  newPage.description = "Most Recently Released"
+  topRatedPage.description = "Highest Imdb Rating"
+
 
   //search tracking
   $scope.showingSearch = false;
@@ -141,7 +152,7 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
           //success, got results
           $scope.searchLoading = false;
           data.forEach(function(val, index, array){
-            var mov = new Movie(val.title, val.imdb_id);
+            var mov = new Movie(val.title, val.imdb_id, val.type);
             mov.imgurl = "/images/" + mov.imdb_id + ".jpg";
             $scope.searchResults.push(mov);
             if(index == array.length - 1) {
@@ -254,7 +265,6 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
   //Load more pages when scrolled to the bottom
   $(window).scroll(function(){
     if($(window).scrollTop() + $(window).height() > $(document).height() - 50){
-
       if(!$scope.currentPage.loading && $scope.currentPage.canLoadMore && shouldExtend){
         shouldExtend = false;
         setTimeout(function() {

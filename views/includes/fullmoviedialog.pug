@@ -17,6 +17,8 @@ div(ng-controller="fullMovie")
                         .info
                           b(style="font-size: 18pt;") {{ movie.fullData.imdbRating }}
                           |  / 10 from {{ movie.fullData.imdbVotes }} votes.
+                        .disclaimer(ng-if="movie.type=='series'")
+                          | Note: The library may not have all seasons.
                         .plot {{ movie.fullData.Plot }}
                 .loading(ng-if="movie.loading")
                   img.loadImg(src="/public/imgs/loading.gif")

@@ -177,7 +177,7 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
       order: [
         ["imdbVotes", "DESC"]
       ],
-      attributes: ["imdb_id", "title"]
+      attributes: ["imdb_id", "title", "type"]
     }
     queryPageWithCache(database.Movie, queryParams, pageTitle, ttl, function(items){
       res.send(items);
@@ -205,7 +205,7 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
       order: [
         ["imdbVotes", "DESC"]
       ],
-      attributes: ["imdb_id", "title"]
+      attributes: ["imdb_id", "title", "type"]
     }
     queryPageWithCache(database.Movie, queryParams, pageTitle, ttl, function(items){
       res.send(items);
@@ -224,21 +224,31 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
       ttl = global.ExtendedPageTTL;
     }
     var pageTitle = "new_" + pageNumber;
-    var queryParams = {
-      offset: pageNumber*16,
-      limit: 16,
-      where: {
-        type: "movie"
-      },
-      order: [
-        ["year", "DESC"]
-      ],
-      attributes: ["imdb_id", "title"]
-    }
-    queryPageWithCache(database.Movie, queryParams, pageTitle, ttl, function(items){
-      res.send(items);
-    }, function(error){
-      res.send({"error" : JSON.stringify(error)});
+
+    cache.get(pageTitle, function(err, value){
+      if(err){
+        logger.error("CACHE_GET_FAILURE: " + pageTitle);
+        error(err);
+        return;
+      }
+      if(value != undefined){
+        logger.debug("CACHE_GET_SUCCESS: " + pageTitle);
+        res.send(value)
+      }else{
+        //basically magic, parses year from year string, casts to int, and orders
+        database.sequelize.query("SELECT imdb_id, title, type FROM movies WHERE type = 'movie' ORDER BY NULLIF(regexp_replace(year, E'\\D', '', 'g'), '')::int DESC, \"createdAt\" DESC LIMIT 16 OFFSET " + pageNumber * 16,
+          {model: database.Movie}
+        ).then(function(items){
+          cache.set(pageTitle, JSON.stringify(items), ttl, function(err, success){
+              if(err){
+                logger.error("CACHE_SET_FAILURE: " + pageTitle);
+              }else{
+                logger.debug("CACHE_SET_SUCCESS: " + pageTitle);
+              }
+          });
+          res.send(items);
+        });
+      }
     });
   });
 
@@ -261,7 +271,7 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
       order: [
         ["imdbRating", "DESC"]
       ],
-      attributes: ["imdb_id", "title"]
+      attributes: ["imdb_id", "title", "type"]
     }
     queryPageWithCache(database.Movie, queryParams, pageTitle, ttl, function(items){
       res.send(items);
@@ -330,7 +340,7 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
             order: [
               ["imdbVotes", "DESC"]
             ],
-            attributes: ["imdb_id", "title"]
+            attributes: ["imdb_id", "title", "type"]
           }).then(function(movies){
             moviesJson = JSON.stringify(movies);
             //store request result
@@ -362,7 +372,7 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
       order: [
         ["imdbVotes", "DESC"]
       ],
-      attributes: ["imdb_id", "title"]
+      attributes: ["imdb_id", "title", "type"]
     }).then(function(movies){
       res.send(JSON.stringify(movies));
     });

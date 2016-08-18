@@ -27,7 +27,7 @@ ListingPage.prototype.loadPage = function($http, done){
   $http.get(this.apiUrl).then(function(response){
     data = response.data || [];
     data.forEach(function(val, index, array){
-      self.movies.push(new Movie(val.title, val.imdb_id));
+      self.movies.push(new Movie(val.title, val.imdb_id, val.type));
     });
     if(self.movies.length < 16){
       self.canLoadMore = false;
@@ -86,7 +86,7 @@ ListingPage.prototype.loadMore = function($http){
     }
     var new_movies = [];
     data.forEach(function(val, index, array){
-      new_movies.push(new Movie(val.title, val.imdb_id));
+      new_movies.push(new Movie(val.title, val.imdb_id, val.type));
     });
     new_movies.forEach(function(movie, index){
       //movie.imgurl = "http://imgserv1-rootns.rhcloud.com/static/" + movie.imdb_id + ".jpg";
