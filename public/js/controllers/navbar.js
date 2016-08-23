@@ -102,7 +102,12 @@ app.controller("navbarController", function($rootScope, $scope, $http){
 
   function setTopActive(){
     setNoneActive();
-    $("#selectTopRated").toggleClass("active", true)
+    $("#selectTopRated").toggleClass("active", true);
+  }
+
+  function setAlphaActive(){
+    setNoneActive();
+    $("#selectAlpha").toggleClass("active", true);
   }
 
   function setNoneActive(){
@@ -110,7 +115,7 @@ app.controller("navbarController", function($rootScope, $scope, $http){
     $("#selectNew").toggleClass("active", false);
     $("#selectTopRated").toggleClass("active", false);
     $("#selectSeries").toggleClass("active", false);
-
+    $("#selectAlpha").toggleClass("active", false);
   }
 
   //Handle clicking of a selection
@@ -133,6 +138,10 @@ app.controller("navbarController", function($rootScope, $scope, $http){
   $scope.selectSeries = function(){
     $rootScope.$broadcast("selectSeries");
     setSeriesActive();
+  }
+  $scope.selectAlpha = function(){
+    $rootScope.$broadcast("selectAlpha");
+    setAlphaActive();
   }
 
   function init(){

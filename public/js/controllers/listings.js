@@ -5,6 +5,7 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
   var newPage = new ListingPage("New Movies", "/api/new", false);
   var topRatedPage = new ListingPage("Top Rated Movies", "/api/top", false);
   var seriesPage = new ListingPage("TV Series", "/api/tv", false);
+  var alphaPage = new ListingPage("Alphabetical", "/api/alpha", false);
   var categoryPages = [];
 
   //used to handle hash changes
@@ -14,10 +15,10 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
   var shouldExtend = true;
 
   //Page descriptions
-  popularPage.description = "Most Imdb Votes"
-  newPage.description = "Most Recently Released"
-  topRatedPage.description = "Highest Imdb Rating"
-
+  popularPage.description = "Most Imdb Votes";
+  newPage.description = "Most Recently Released";
+  topRatedPage.description = "Highest Imdb Rating";
+  alphaPage.description = "Alphabetically by Title";
 
   //search tracking
   $scope.showingSearch = false;
@@ -120,6 +121,15 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
     $window.location.hash = "#top";
     $scope.currentPage = topRatedPage;
     topRatedPage.loadIfNotLoaded($http);
+    $scope.showingSearch = false;
+  });
+
+  $scope.$on("selectAlpha", function(event, arg){
+    console.log("selecting alphabetical");
+    ignoreHashChange = true;
+    $window.location.hash = "#alpha";
+    $scope.currentPage = alphaPage;
+    alphaPage.loadIfNotLoaded($http);
     $scope.showingSearch = false;
   });
 
@@ -231,6 +241,9 @@ app.controller("listingController", function($scope, $http, $window, $rootScope)
           break;
         case "series":
           $scope.currentPage = seriesPage;
+          break;
+        case "alpha":
+          $scope.currentPage = alphaPage;
           break;
         default:
           $scope.currentPage = popularPage;

@@ -66,6 +66,29 @@ module.exports = function(logger, cache, database){
     });
   }
 
+  //Query database for the aphabetical page, reset cache entry for that
+  function regenerateAlphaCache(){
+    database.Movie.findAll({
+      limit: 16,
+      where: {
+        type: "movie"
+      },
+      order: [
+        ["title", "ASC"],
+        ["imdbRating", "DESC"]
+      ],
+      attributes: ["imdb_id", "title"]
+    }).then(function(movies){
+      cache.set("alpha_0", JSON.stringify(movies), global.FontPageTTL, function(err, success){
+        if(err){
+          logger.error("CACHE_SET_FAILURE: alpha_0");
+        }else{
+          logger.debug("CACHE_SET_SUCCESS: alpha_0");
+        }
+      });
+    });
+  }
+
   //Handle cache entry expiration, regenerate it if it is the front of a main section, such as popular or top
   cache.on("expired", function(key, value){
     logger.debug("CACHE_EXPIRE: " + key);
@@ -78,7 +101,10 @@ module.exports = function(logger, cache, database){
         break;
       case "top_0":
         regenerateTopCache();
-      break;
+        break;
+      case "alpha_0":
+        regenerateAlphaCache();
+        break;
     }
   });
 

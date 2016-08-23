@@ -280,6 +280,36 @@ module.exports = function(logger, express, request, database, cache, auth, fs){
     });
   });
 
+  //get movies in alphabetical order
+  router.get("/alpha", function(req, res){
+    var pageNumber = Number(req.query.page) - 1 || 0;
+    var ttl = 0;
+    if(pageNumber == 1){
+      ttl = global.FrontPageTTL;
+    }else{
+      ttl = global.ExtendedPageTTL;
+    }
+    var pageTitle = "alpha_" + pageNumber;
+    var queryParams = {
+      offset: pageNumber*16,
+      limit: 16,
+      where: {
+        type: "movie"
+      },
+      order: [
+        ["title", "ASC"],
+        //secondary sort order to avoid weird pagination bugs
+        ["imdbRating", "DESC"]
+      ],
+      attributes: ["imdb_id", "title", "type"]
+    }
+    queryPageWithCache(database.Movie, queryParams, pageTitle, ttl, function(items){
+      res.send(items);
+    }, function(error){
+      res.send({"error" : JSON.stringify(error)});
+    });
+  });
+
   //Get the list of categories, cached
   router.get("/listcategories", function(req, res){
     cache.get("categories", function(err, value){
