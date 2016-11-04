@@ -24,16 +24,11 @@ module.exports = function(logger, cache, database){
 
   //Query database for newest pages, reset cache entry for that
   function regenerateNewCache(){
-    database.Movie.findAll({
-      limit: 16,
-      where: {
-        type: "movie"
-      },
-      order: [
-        ["year", "DESC"]
-      ],
-      attributes: ["imdb_id", "title"]
-    }).then(function(movies){
+    //special ordering for new so it is always the same, selecting
+    //offset regions breaks otherwise
+    database.sequelize.query("SELECT imdb_id, title, type FROM movies WHERE type = 'movie' ORDER BY NULLIF(regexp_replace(year, E'\\D', '', 'g'), '')::int DESC, \"createdAt\" DESC LIMIT 16 OFFSET " + pageNumber * 16,
+      {model: database.Movie}
+    ).then(function(movies){
       cache.set("new_0", JSON.stringify(movies), global.FontPageTTL, function(err, success){
         if(err){
           logger.error("CACHE_SET_FAILURE: new_0");
