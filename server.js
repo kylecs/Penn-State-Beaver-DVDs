@@ -30,6 +30,7 @@ var cacheUtils = require("./cache/cacheUtil")(logger, cache, database);
 //sets up a winston logger on console and file
 function createLogger() {
   //find directory on openshift or locally
+  /*
   var logDir = "";
   if(process.env.OPENSHIFT_DATA_DIR){
     logDir += process.env.OPENSHIFT_DATA_DIR + "winston-logs/";
@@ -44,7 +45,7 @@ function createLogger() {
   try{
     fs.writeFileSync(logFile, "", { flag: "wx" });
   }catch(err) {}
-
+*/
   //log debug level locally, but info level on production
   var logLevel = "";
   if(global.Production){
@@ -55,8 +56,8 @@ function createLogger() {
   console.log("Useing logging level: " + logLevel);
   return new (winston.Logger)({
     transports: [
-      new (winston.transports.Console)({ level: logLevel }),
-      new (winston.transports.File)({ filename: logFile, json: false, level: logLevel }),
+      new (winston.transports.Console)({ level: logLevel })
+      //new (winston.transports.File)({ filename: logFile, json: false, level: logLevel }),
     ]
   });
 }
